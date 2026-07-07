@@ -8,7 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    private val url = "http://10.241.0.140:8080/"
+    private const val BASE_URL = "https://soundwave-backend-1s3y.onrender.com/"
     lateinit var tokenManager: TokenManager
 
     fun init(context: Context) {
@@ -26,7 +26,7 @@ object RetrofitInstance {
 
     val api: ApiService by lazy {
         retrofit2.Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

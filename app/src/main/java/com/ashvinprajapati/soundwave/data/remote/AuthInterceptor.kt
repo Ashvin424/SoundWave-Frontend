@@ -16,7 +16,9 @@ class AuthInterceptor(
         }
         val request = chain.request()
 
-        if (request.url.encodedPath.contains("/api/auth/")) {
+        val path = request.url.encodedPath
+        if (path.contains("/api/auth/login") ||
+            path.contains("/api/auth/register")) {
             return chain.proceed(request)
         }
 

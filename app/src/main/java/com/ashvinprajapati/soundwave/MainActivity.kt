@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         RetrofitInstance.init(applicationContext)
         setContent {
-            SoundWaveTheme(darkTheme = true) {
+            SoundWaveTheme {
                 val navController = rememberNavController()
                 val context = LocalContext.current
                 val tokenManager = remember { TokenManager(context) }

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -27,7 +28,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,16 +65,6 @@ fun LoginScreen(
     var password by remember {mutableStateOf("")}
     var isPasswordVisible by remember { mutableStateOf(false) }
     val loginState by viewModel.loginStates.collectAsState()
-
-    LaunchedEffect(loginState) {
-        if (loginState == "SUCCESS") {
-            navController.navigate("login") {
-                popUpTo("login") {
-                    inclusive = true
-                }
-            }
-        }
-    }
 
 
     Column(
@@ -188,7 +178,10 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        viewModel.showForgotPasswordDialog = true
+                        viewModel.forgotPasswordMessage = ""
+                    },
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Text(
@@ -222,7 +215,7 @@ fun LoginScreen(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate("register") },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text(
@@ -239,13 +232,82 @@ fun LoginScreen(
                 Text(text = loginState)
             }
         }
+        if (viewModel.showForgotPasswordDialog) {
+            ForgotPasswordDialog(
+                onDismiss = {
+                    viewModel.showForgotPasswordDialog = false
+                    viewModel.forgotPasswordMessage = ""
+                    viewModel.forgotPasswordSuccess = false
+                },
+                onConfirm = { email ->
+                    viewModel.forgotPassword(email)
+                },
+                errorMessage = viewModel.forgotPasswordMessage,
+                isSuccess = viewModel.forgotPasswordSuccess
+            )
+        }
     }
+}
+
+@Composable
+fun ForgotPasswordDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+    errorMessage: String,
+    isSuccess: Boolean
+) {
+    var email by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Forgot Password") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (isSuccess) {
+                    Text(
+                        text = "Password reset email sent",
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else {
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
+                if (errorMessage.isNotEmpty()) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+
+        },
+        confirmButton = {
+            if (isSuccess) {
+                TextButton(onClick = onDismiss) { Text("Done") }
+            } else {
+                TextButton(onClick = { onConfirm(email) }) {
+                    Text("Send")
+                }
+            }
+        },
+        dismissButton = {
+            if (!isSuccess) {
+                TextButton(onClick = onDismiss) { Text("Cancel") }
+            }
+        }
+    )
+
 }
 
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun LoginScreenPrev() {
-    SoundWaveTheme(darkTheme = true) {
+    SoundWaveTheme {
         LoginScreen(modifier = Modifier, navController = rememberNavController())
     }
 }

@@ -1,6 +1,5 @@
 package com.ashvinprajapati.soundwave.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -20,13 +19,10 @@ private val DarkColorScheme = darkColorScheme(
 fun SoundWaveTheme(
     // We remove the darkTheme and dynamicColor parameters or set them to defaults
     // that don't affect the internal logic anymore.
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     // We bypass all logic and strictly use your DarkColorScheme
     val colorScheme = DarkColorScheme
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

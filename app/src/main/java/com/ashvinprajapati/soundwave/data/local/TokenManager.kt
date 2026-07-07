@@ -3,10 +3,9 @@ package com.ashvinprajapati.soundwave.data.local
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import com.ashvinprajapati.soundwave.data.local.dataStore
 import kotlinx.coroutines.flow.first
 
-private val Context.dataStore by preferencesDataStore("auth_prefs")
 
 class TokenManager(private val context: Context) {
     companion object {
