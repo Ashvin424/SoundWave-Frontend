@@ -2,6 +2,8 @@
 
 SoundWave is an Android music streaming app built with **Kotlin** and **Jetpack Compose**. It provides a modern UI for browsing, searching, and playing songs, backed by a REST API.
 
+Backend Repository: https://github.com/Ashvin424/SoundWave-Backend
+
 ## Features
 
 - 🔐 **Authentication** — Login screen backed by a token-based auth flow
